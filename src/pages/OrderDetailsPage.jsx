@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import { API_URL } from '../api/config'
 
 const OrderDetailsPage = () => {
   const { orderId } = useParams()
@@ -21,7 +22,7 @@ const OrderDetailsPage = () => {
       }
 
       try {
-        const response = await fetch(`http://localhost:5000/api/orders/${orderId}`, {
+        const response = await fetch(`${API_URL}/orders/${orderId}`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('glowHavenToken')}`
           }
@@ -52,7 +53,7 @@ const OrderDetailsPage = () => {
     
     try {
       const token = localStorage.getItem('glowHavenToken')
-      const response = await fetch(`http://localhost:5000/api/orders/${orderId}/invoice`, {
+      const response = await fetch(`${API_URL}/orders/${orderId}/invoice`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
