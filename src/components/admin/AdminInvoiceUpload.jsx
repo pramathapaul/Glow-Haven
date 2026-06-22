@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { API_URL } from '../../api/config'
 
 const AdminInvoiceUpload = ({ orderId, orderNumber, onInvoiceUploaded, onClose }) => {
   const [file, setFile] = useState(null)
@@ -56,7 +57,7 @@ const AdminInvoiceUpload = ({ orderId, orderNumber, onInvoiceUploaded, onClose }
       formData.append('invoiceFile', file)
       formData.append('notes', notes)
 
-      const response = await fetch(`http://localhost:5000/api/orders/${orderId}/invoice`, {
+      const response = await fetch(`${API_URL}/orders/${orderId}/invoice`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
