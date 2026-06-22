@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import AdminProductForm from './AdminProductForm'
+import { API_URL } from '../api/config'
 
 const AdminProducts = () => {
   const [products, setProducts] = useState([])
@@ -17,7 +18,7 @@ const AdminProducts = () => {
     setLoading(true)
     try {
       const token = localStorage.getItem('glowHavenToken')
-      const response = await fetch('http://localhost:5000/api/products', {
+      const response = await fetch(`${API_URL}/products`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -52,7 +53,7 @@ const AdminProducts = () => {
 
     try {
       const token = localStorage.getItem('glowHavenToken')
-      const response = await fetch(`http://localhost:5000/api/products/${productId}`, {
+      const response = await fetch(`${API_URL}/products/${productId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -75,8 +76,8 @@ const AdminProducts = () => {
     try {
       const token = localStorage.getItem('glowHavenToken')
       const url = editingProduct 
-        ? `http://localhost:5000/api/products/${editingProduct._id || editingProduct.id}`
-        : 'http://localhost:5000/api/products'
+        ? `${API_URL}/products/${editingProduct._id || editingProduct.id}`
+        : '${API_URL}/products'
       
       const method = editingProduct ? 'PUT' : 'POST'
       
