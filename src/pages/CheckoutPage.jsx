@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useCart } from '../contexts/CartContext'
 import { useAuth } from '../contexts/AuthContext'
+import {API_URL} from '../api/config'
 
 const CheckoutPage = () => {
   const navigate = useNavigate()
@@ -12,7 +13,7 @@ const CheckoutPage = () => {
   const [errors, setErrors] = useState({})
 
   // WhatsApp number (replace with your actual number)
-  const WHATSAPP_NUMBER = '9234567890' // Replace with your WhatsApp number
+  const WHATSAPP_NUMBER = '8910434478' // Replace with your WhatsApp number
 
   // Form state
   const [formData, setFormData] = useState({
@@ -169,7 +170,7 @@ Thank you for choosing Glow Haven! ✨
 
       // console.log('📦 Creating order:', orderData)
 
-      const response = await fetch('http://localhost:5000/api/orders', {
+      const response = await fetch(`${API_URL}/orders`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
