@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import { API_URL } from '../api/config'
 
 const AdminLoginPage = () => {
   const navigate = useNavigate()
@@ -51,7 +52,7 @@ const AdminLoginPage = () => {
     
     try {
       // Call admin login API
-      const response = await fetch('http://localhost:5000/api/users/admin-login', {
+      const response = await fetch(`${API_URL}/users/admin-login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
