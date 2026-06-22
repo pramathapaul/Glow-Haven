@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
 import AdminInvoiceUpload from './AdminInvoiceUpload'
+import { API_URL } from '../../api/config'
 
 const AdminDashboard = () => {
   const { user } = useAuth()
@@ -22,8 +23,8 @@ const AdminDashboard = () => {
     try {
       const token = localStorage.getItem('glowHavenToken')
       const url = selectedStatus === 'all'
-        ? 'http://localhost:5000/api/orders/admin/all'
-        : `http://localhost:5000/api/orders/admin/all?status=${selectedStatus}`
+        ? `${API_URL}/orders/admin/all`
+        : `${API_URL}/orders/admin/all?status=${selectedStatus}`
 
       const response = await fetch(url, {
         headers: {
@@ -47,7 +48,7 @@ const AdminDashboard = () => {
     setUpdatingOrderId(orderId)
     try {
       const token = localStorage.getItem('glowHavenToken')
-      const response = await fetch(`http://localhost:5000/api/orders/${orderId}/status`, {
+      const response = await fetch(`${API_URL}/orders/${orderId}/status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -71,7 +72,7 @@ const AdminDashboard = () => {
     setUpdatingOrderId(orderId)
     try {
       const token = localStorage.getItem('glowHavenToken')
-      const response = await fetch(`http://localhost:5000/api/orders/${orderId}/payment`, {
+      const response = await fetch(`${API_URL}/orders/${orderId}/payment`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
