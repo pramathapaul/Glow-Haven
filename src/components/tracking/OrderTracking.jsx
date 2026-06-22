@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { API_URL } from '../api/config'
 
 const OrderTracking = () => {
   const [orderId, setOrderId] = useState('')
@@ -19,7 +20,7 @@ const OrderTracking = () => {
     setTrackingData(null)
 
     try {
-      const response = await fetch(`http://localhost:5000/api/tracking/${orderId.trim()}`)
+      const response = await fetch(`${API_URL}/tracking/${orderId.trim()}`)
       const data = await response.json()
       
       if (data.success) {
