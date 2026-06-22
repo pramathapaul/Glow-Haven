@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import { API_URL } from '../api/config'
 
 const OrdersPage = () => {
   const { user } = useAuth()
@@ -13,7 +14,7 @@ const OrdersPage = () => {
       if (!user) return
 
       try {
-        const response = await fetch('http://localhost:5000/api/orders/my-orders', {
+        const response = await fetch(`${API_URL}/orders/my-orders`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('glowHavenToken')}`
           }
