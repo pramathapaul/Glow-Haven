@@ -1,5 +1,5 @@
 // src/api/database.js
-const API_URL = import.meta.env.VITE_API_URL || 'https://glow-haven-backend.onrender.com/api'
+const API_URL ='https://glow-haven-backend.onrender.com/api'
 
 // Helper to handle API responses
 const handleResponse = async (response) => {
