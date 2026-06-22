@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate, Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { useGoogleLogin } from '@react-oauth/google'
+import { API_URL } from '../api/config'
 
 const LoginPage = () => {
   const [isLogin, setIsLogin] = useState(true)
@@ -37,7 +38,7 @@ const LoginPage = () => {
   const googleLogin = useGoogleLogin({
     onSuccess: (response) => {
       // Redirect to backend Google OAuth
-      window.location.href = 'http://localhost:5000/api/auth/google'
+      window.location.href = `${API_URL}/auth/google`
     },
     onError: (error) => {
       console.error('Google login error:', error)
