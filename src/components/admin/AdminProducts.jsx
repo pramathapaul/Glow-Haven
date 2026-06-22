@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import AdminProductForm from './AdminProductForm'
-import { API_URL } from '../api/config'
+import { API_URL } from '../../api/config'
 
 const AdminProducts = () => {
   const [products, setProducts] = useState([])
