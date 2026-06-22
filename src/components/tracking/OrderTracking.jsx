@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { API_URL } from '../api/config'
+import { API_URL } from '../../api/config'
 
 const OrderTracking = () => {
   const [orderId, setOrderId] = useState('')
