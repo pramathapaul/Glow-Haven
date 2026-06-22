@@ -13,7 +13,7 @@ const CheckoutPage = () => {
   const [errors, setErrors] = useState({})
 
   // WhatsApp number (replace with your actual number)
-  const WHATSAPP_NUMBER = '8910434478' // Replace with your WhatsApp number
+  const WHATSAPP_NUMBER = '+91 8910434478' // Replace with your WhatsApp number
 
   // Form state
   const [formData, setFormData] = useState({
