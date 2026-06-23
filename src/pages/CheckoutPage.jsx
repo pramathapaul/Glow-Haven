@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useCart } from '../contexts/CartContext'
 import { useAuth } from '../contexts/AuthContext'
-import {API_URL} from '../api/config'
 
 const CheckoutPage = () => {
   const navigate = useNavigate()
@@ -13,7 +12,7 @@ const CheckoutPage = () => {
   const [errors, setErrors] = useState({})
 
   // WhatsApp number (replace with your actual number)
-  const WHATSAPP_NUMBER = '+91 8910434478' // Replace with your WhatsApp number
+  const WHATSAPP_NUMBER = '9234567890' // Replace with your WhatsApp number
 
   // Form state
   const [formData, setFormData] = useState({

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import AdminProductForm from './AdminProductForm'
 import { API_URL } from '../../api/config'
+import AdminProductForm from './AdminProductForm'
 
 const AdminProducts = () => {
   const [products, setProducts] = useState([])
@@ -77,7 +77,7 @@ const AdminProducts = () => {
       const token = localStorage.getItem('glowHavenToken')
       const url = editingProduct 
         ? `${API_URL}/products/${editingProduct._id || editingProduct.id}`
-        : '${API_URL}/products'
+        : `${API_URL}/products`
       
       const method = editingProduct ? 'PUT' : 'POST'
       
