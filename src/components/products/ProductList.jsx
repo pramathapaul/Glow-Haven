@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams, Link } from 'react-router-dom'  // Add Link here
 import { api } from '../../api/database'
 import ProductCard from './ProductCard'
 
