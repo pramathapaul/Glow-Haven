@@ -2,12 +2,14 @@ import React, { useState, useRef, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useCart } from '../../contexts/CartContext'
 import { useAuth } from '../../contexts/AuthContext'
+import { API_URL } from '../../api/config'
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [searchSuggestions, setSearchSuggestions] = useState([])
   const [showSuggestions, setShowSuggestions] = useState(false)
+  const [isSearching, setIsSearching] = useState(false)
   const { totalItems } = useCart()
   const { user, logout } = useAuth()
   const navigate = useNavigate()
@@ -31,16 +33,25 @@ const Navbar = () => {
         return
       }
 
+      setIsSearching(true)
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL || 'https://glow-haven-backend.onrender.com/api'}/products?search=${encodeURIComponent(searchQuery)}&limit=5`
+          `${API_URL}/products?search=${encodeURIComponent(searchQuery)}&limit=5`
         )
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+        
         const data = await response.json()
         const products = data.data || []
         setSearchSuggestions(products.slice(0, 5))
         setShowSuggestions(true)
       } catch (error) {
         console.error('Error fetching suggestions:', error)
+        setSearchSuggestions([])
+      } finally {
+        setIsSearching(false)
       }
     }
 
@@ -59,17 +70,33 @@ const Navbar = () => {
   }
 
   const handleSuggestionClick = (productId) => {
-    navigate(`/product/${productId}`)
-    setSearchQuery('')
-    setShowSuggestions(false)
-    setIsMenuOpen(false)
+    if (productId) {
+      navigate(`/product/${productId}`)
+      setSearchQuery('')
+      setShowSuggestions(false)
+      setIsMenuOpen(false)
+    }
+  }
+
+  const handleLogout = async () => {
+    try {
+      await logout()
+      navigate('/')
+      setIsMenuOpen(false)
+    } catch (error) {
+      console.error('Logout error:', error)
+      localStorage.removeItem('glowHavenToken')
+      localStorage.removeItem('glowHavenUser')
+      navigate('/')
+      setIsMenuOpen(false)
+    }
   }
 
   return (
     <header className="fixed top-0 w-full z-50 bg-surface/80 glass-header shadow-sm transition-all duration-300">
       <nav className="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-4 max-w-container-max mx-auto">
         {/* Brand with Logo */}
-        <Link to="/" className="flex items-center gap-3 flex-shrink-0">
+        <Link to="/" className="flex items-center gap-3 flex-shrink-0" onClick={() => setIsMenuOpen(false)}>
           <img 
             src="/logo.png" 
             alt="Glow Haven Logo" 
@@ -126,7 +153,13 @@ const Navbar = () => {
                 onFocus={() => searchQuery.length >= 2 && setShowSuggestions(true)}
                 placeholder="Search products..."
                 className="bg-surface-container-low border-none rounded-full py-2 pl-10 pr-4 w-48 focus:w-64 focus:ring-1 focus:ring-primary-container transition-all duration-300 text-body-md outline-none"
+                disabled={isSearching}
               />
+              {isSearching && (
+                <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                  <div className="animate-spin rounded-full h-4 w-4 border-2 border-primary border-t-transparent"></div>
+                </div>
+              )}
             </form>
             
             {/* Search Suggestions */}
@@ -143,6 +176,9 @@ const Navbar = () => {
                         src={product.img} 
                         alt={product.name} 
                         className="w-10 h-10 rounded-lg object-cover bg-secondary-container"
+                        onError={(e) => {
+                          e.target.style.display = 'none'
+                        }}
                       />
                     )}
                     <div className="flex-1 min-w-0">
@@ -156,17 +192,33 @@ const Navbar = () => {
             )}
           </div>
 
+          {/* User Profile / Login */}
           {user ? (
-            <Link to="/profile" className="hover:opacity-80 transition-opacity text-primary" title="Profile">
+            <Link 
+              to="/profile" 
+              className="hover:opacity-80 transition-opacity text-primary" 
+              title="Profile"
+              onClick={() => setIsMenuOpen(false)}
+            >
               <span className="material-symbols-outlined text-[24px]">person</span>
             </Link>
           ) : (
-            <Link to="/login" className="hover:opacity-80 transition-opacity text-primary" title="Login">
+            <Link 
+              to="/login" 
+              className="hover:opacity-80 transition-opacity text-primary" 
+              title="Login"
+              onClick={() => setIsMenuOpen(false)}
+            >
               <span className="material-symbols-outlined text-[24px]">login</span>
             </Link>
           )}
 
-          <Link to="/cart" className="hover:opacity-80 transition-opacity text-primary relative">
+          {/* Cart */}
+          <Link 
+            to="/cart" 
+            className="hover:opacity-80 transition-opacity text-primary relative"
+            onClick={() => setIsMenuOpen(false)}
+          >
             <span className="material-symbols-outlined text-[24px]">shopping_bag</span>
             {totalItems > 0 && (
               <span className="absolute -top-1 -right-1 bg-primary text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
@@ -175,6 +227,7 @@ const Navbar = () => {
             )}
           </Link>
 
+          {/* Mobile menu toggle */}
           <button 
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="md:hidden text-primary"
