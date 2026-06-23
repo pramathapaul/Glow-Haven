@@ -1,5 +1,5 @@
 {
-  "name": "glow-haven-react",
+  "name": "glow-haven-frontend",
   "private": true,
   "version": "1.0.0",
   "type": "module",
@@ -9,10 +9,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@react-oauth/google": "^0.13.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.20.1"
+    "react-router-dom": "^6.20.1",
+    "@react-oauth/google": "^0.11.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",
@@ -21,6 +21,6 @@
     "autoprefixer": "^10.4.16",
     "postcss": "^8.4.32",
     "tailwindcss": "^3.3.6",
-    "vite": "^8.0.16"
+    "vite": "^5.4.8"
   }
 }
