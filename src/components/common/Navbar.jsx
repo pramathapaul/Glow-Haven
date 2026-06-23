@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useCart } from '../../contexts/CartContext'
 import { useAuth } from '../../contexts/AuthContext'
@@ -6,22 +6,62 @@ import { useAuth } from '../../contexts/AuthContext'
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const [searchSuggestions, setSearchSuggestions] = useState([])
+  const [showSuggestions, setShowSuggestions] = useState(false)
   const { totalItems } = useCart()
   const { user, logout } = useAuth()
   const navigate = useNavigate()
+  const searchRef = useRef(null)
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setShowSuggestions(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  // Fetch suggestions as user types
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      if (searchQuery.length < 2) {
+        setSearchSuggestions([])
+        return
+      }
+
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/products?search=${encodeURIComponent(searchQuery)}&limit=5`
+        )
+        const data = await response.json()
+        const products = data.data || []
+        setSearchSuggestions(products.slice(0, 5))
+        setShowSuggestions(true)
+      } catch (error) {
+        console.error('Error fetching suggestions:', error)
+      }
+    }
+
+    const debounceTimer = setTimeout(fetchSuggestions, 300)
+    return () => clearTimeout(debounceTimer)
+  }, [searchQuery])
 
   const handleSearch = (e) => {
     e.preventDefault()
     if (searchQuery.trim()) {
       navigate(`/shop?search=${encodeURIComponent(searchQuery.trim())}`)
       setSearchQuery('')
+      setShowSuggestions(false)
       setIsMenuOpen(false)
     }
   }
 
-  const handleLogout = () => {
-    logout()
-    navigate('/')
+  const handleSuggestionClick = (productId) => {
+    navigate(`/product/${productId}`)
+    setSearchQuery('')
+    setShowSuggestions(false)
     setIsMenuOpen(false)
   }
 
@@ -35,7 +75,6 @@ const Navbar = () => {
             alt="Glow Haven Logo" 
             className="h-10 w-auto object-contain"
             onError={(e) => {
-              // Fallback if logo doesn't load
               e.target.style.display = 'none'
             }}
           />
@@ -74,18 +113,48 @@ const Navbar = () => {
 
         {/* Actions */}
         <div className="flex items-center space-x-4 md:space-x-6">
-          <form onSubmit={handleSearch} className="hidden lg:flex items-center relative group">
-            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">
-              search
-            </span>
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search rituals..."
-              className="bg-surface-container-low border-none rounded-full py-2 pl-10 pr-4 w-48 focus:w-64 focus:ring-1 focus:ring-primary-container transition-all duration-300 text-body-md outline-none"
-            />
-          </form>
+          {/* Search - Desktop with Suggestions */}
+          <div ref={searchRef} className="hidden lg:block relative">
+            <form onSubmit={handleSearch} className="flex items-center relative group">
+              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">
+                search
+              </span>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => searchQuery.length >= 2 && setShowSuggestions(true)}
+                placeholder="Search products..."
+                className="bg-surface-container-low border-none rounded-full py-2 pl-10 pr-4 w-48 focus:w-64 focus:ring-1 focus:ring-primary-container transition-all duration-300 text-body-md outline-none"
+              />
+            </form>
+            
+            {/* Search Suggestions */}
+            {showSuggestions && searchSuggestions.length > 0 && (
+              <div className="absolute top-full left-0 right-0 mt-1 bg-surface-container-lowest rounded-xl shadow-lg border border-outline-variant/30 overflow-hidden z-50">
+                {searchSuggestions.map((product) => (
+                  <button
+                    key={product._id || product.id}
+                    onClick={() => handleSuggestionClick(product._id || product.id)}
+                    className="w-full flex items-center gap-3 px-4 py-3 hover:bg-surface-container transition-colors text-left"
+                  >
+                    {product.img && (
+                      <img 
+                        src={product.img} 
+                        alt={product.name} 
+                        className="w-10 h-10 rounded-lg object-cover bg-secondary-container"
+                      />
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-on-surface truncate">{product.name}</p>
+                      <p className="text-xs text-on-surface-variant">₹{product.price?.toFixed(2)}</p>
+                    </div>
+                    <span className="material-symbols-outlined text-sm text-outline">arrow_forward</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
 
           {user ? (
             <Link to="/profile" className="hover:opacity-80 transition-opacity text-primary" title="Profile">
@@ -120,17 +189,19 @@ const Navbar = () => {
       {isMenuOpen && (
         <div className="md:hidden bg-surface-container-lowest px-6 py-6 border-t border-outline-variant/30 shadow-lg max-h-[calc(100vh-80px)] overflow-y-auto">
           <div className="flex flex-col space-y-4">
+            {/* Mobile Search */}
             <form onSubmit={handleSearch} className="flex items-center border-b border-outline-variant pb-2">
               <span className="material-symbols-outlined text-outline mr-2">search</span>
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search..."
+                placeholder="Search products..."
                 className="bg-transparent border-none outline-none flex-1 text-body-md"
               />
             </form>
             
+            {/* Navigation Links */}
             <Link to="/shop" className="text-on-surface font-jakarta text-body-md" onClick={() => setIsMenuOpen(false)}>
               Shop All
             </Link>
