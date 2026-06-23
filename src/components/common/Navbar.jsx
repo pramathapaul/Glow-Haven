@@ -33,7 +33,7 @@ const Navbar = () => {
 
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/products?search=${encodeURIComponent(searchQuery)}&limit=5`
+          `${import.meta.env.VITE_API_URL || 'https://glow-haven-backend.onrender.com/api'}/products?search=${encodeURIComponent(searchQuery)}&limit=5`
         )
         const data = await response.json()
         const products = data.data || []
