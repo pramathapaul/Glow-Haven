@@ -58,7 +58,7 @@ const ProductList = () => {
     loadProducts()
   }, [loadProducts])
 
-  const categories = ['All', 'Serums', 'Moisturizers', 'Cleansers', 'Masks', 'Toners', 'Eye Care', 'Sun Care', 'Lipsticks', 'Nail Polish', 'Makeup', 'Fragrance']
+  const categories = ['All', 'Serums', 'Moisturizers', 'Cleansers', 'Masks', 'Toners', 'Eye Care', 'Sun Care', 'Lipsticks', 'Nail Polish', 'Makeup', 'Fragrance', 'Body Wash']
 
   // Loading skeleton
   if (loading) {
