@@ -31,7 +31,7 @@ const AdminProductForm = ({ product, onSave, onCancel, isEditing }) => {
   })
   const [colorPreview, setColorPreview] = useState(null)
 
-  const categories = ['Serums', 'Moisturizers', 'Cleansers', 'Masks', 'Toners', 'Eye Care', 'Sun Care', 'Lipsticks', 'Nail Polish', 'Makeup', 'Accessories']
+  const categories = ['Serums', 'Moisturizers', 'Cleansers', 'Masks', 'Toners', 'Eye Care', 'Sun Care', 'Lipsticks', 'Nail Polish', 'Makeup', 'Accessories', 'Fragrance']
   const tags = ['NEW IN', 'BEST SELLER', 'VEGAN', 'LIMITED EDITION', 'SALE', '']
 
   useEffect(() => {
