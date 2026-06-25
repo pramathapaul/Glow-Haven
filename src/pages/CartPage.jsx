@@ -43,7 +43,7 @@ const CartPage = () => {
   }
 
   const subtotal = totalPrice
-  const shipping = subtotal > 1000 ? 0 : 50
+  const shipping = subtotal > 5000 ? 0 : 90
   const tax = 0
   const total = subtotal + shipping + tax
 
