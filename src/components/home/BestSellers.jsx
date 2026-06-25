@@ -85,7 +85,7 @@ const BestSellers = () => {
           <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
             <div>
               <h3 className="font-playfair text-2xl">Limited Time Offer</h3>
-              <p className="text-white/90 mt-2">Get 20% off on all best sellers. Use code: <span className="font-bold tracking-wider">GLOW20</span></p>
+              <p className="text-white/90 mt-2">Get 20% off on all best sellers</p>
             </div>
             <Link 
               to="/shop" 
