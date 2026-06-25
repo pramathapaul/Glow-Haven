@@ -126,6 +126,9 @@ const CartPage = () => {
                   <span>Total</span>
                   <span className="text-primary">₹{total.toFixed(2)}</span>
                 </div>
+                <div className="flex justify-between font-playfair text-headline-sm">
+                  <span>Shipping charges vary based on package weight</span>
+                </div>
               </div>
             </div>
 
